@@ -1,0 +1,4 @@
+# FlightAdvisor application
+
+## Documentation
+## API
