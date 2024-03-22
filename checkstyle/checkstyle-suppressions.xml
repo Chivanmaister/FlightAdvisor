@@ -6,4 +6,5 @@
 
 <suppressions>
   <suppress checks="MissingJavadocType"/>
+  <suppress checks="MissingJavadocMethod"/>
 </suppressions>
