@@ -1,5 +1,6 @@
 package com.ivanm.flightadvisor;
 
+import com.ivanm.flightadvisor.service.domain.Airport;
 import com.ivanm.flightadvisor.service.domain.Route;
 import com.ivanm.flightadvisor.util.parser.CsvParser;
 import jakarta.annotation.PostConstruct;
@@ -28,6 +29,8 @@ public class FlightAdvisorApplication {
 
   @PostConstruct
   public void createRoutes() throws IOException {
-    List<Route> routeList = CsvParser.toRoute(routeResource.getFile());
+
+    List<Route> routeList = CsvParser.toRoutes(routeResource.getFile());
+    List<Airport> airportList = CsvParser.toAirports(airportResource.getFile());
   }
 }
