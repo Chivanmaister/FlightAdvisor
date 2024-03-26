@@ -1,8 +1,10 @@
 package com.ivanm.flightadvisor;
 
+import com.ivanm.flightadvisor.dao.AirportRepository;
 import com.ivanm.flightadvisor.dao.RouteRepository;
 import com.ivanm.flightadvisor.service.domain.Airport;
 import com.ivanm.flightadvisor.service.domain.Route;
+import com.ivanm.flightadvisor.util.dto.AirportDto;
 import com.ivanm.flightadvisor.util.dto.RouteDto;
 import com.ivanm.flightadvisor.util.parser.CsvParser;
 import jakarta.annotation.PostConstruct;
@@ -26,6 +28,8 @@ public class FlightAdvisorApplication {
 
   @Autowired
   private RouteRepository routeRepository;
+  @Autowired
+  private AirportRepository airportRepository;
 
   public static void main(String[] args) {
 
@@ -45,6 +49,7 @@ public class FlightAdvisorApplication {
     List<Route> routeList = CsvParser.toRoutes(routeResource.getFile());
     List<Airport> airportList = CsvParser.toAirports(airportResource.getFile());
 
-    routeRepository.saveAll(RouteDto.toEntityList(routeList));
+    airportRepository.saveAll(AirportDto.toEntities(airportList));
+    routeRepository.saveAll(RouteDto.toEntities(routeList));
   }
 }
