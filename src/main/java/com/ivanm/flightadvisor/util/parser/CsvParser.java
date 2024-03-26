@@ -22,36 +22,6 @@ public final class CsvParser {
     throw new ClassInitializationException("CSVParser cannot be initialized");
   }
 
-  public static List<Route> toRoutes(File path) {
-
-    List<Route> routes = Collections.emptyList();
-
-    try (CSVParser parser = CSVParser.parse(path, Charset.defaultCharset(), CSVFormat.DEFAULT)) {
-      routes =
-          parser.getRecords().stream()
-              .map(
-                  record ->
-                      Route.builder()
-                          .airline(record.get(0))
-                          .airlineId(record.get(1))
-                          .sourceAirport(record.get(2))
-                          .sourceAirportId(record.get(3))
-                          .destinationAirport(record.get(4))
-                          .destinationAirportId(record.get(5))
-                          .codeShare(record.get(6))
-                          .stops(record.get(7))
-                          .equipment(record.get(8))
-                          .price(record.get(9))
-                          .build())
-              .toList();
-    } catch (IOException e) {
-      log.error("Unable to parse CSV on path: " + path, e);
-      //      throw new RuntimeException(e);
-    }
-
-    return routes;
-  }
-
   public static List<Airport> toAirports(File path) {
 
     List<Airport> airports = Collections.emptyList();
@@ -83,5 +53,35 @@ public final class CsvParser {
     }
 
     return airports;
+  }
+
+  public static List<Route> toRoutes(File path) {
+
+    List<Route> routes = Collections.emptyList();
+
+    try (CSVParser parser = CSVParser.parse(path, Charset.defaultCharset(), CSVFormat.DEFAULT)) {
+      routes =
+          parser.getRecords().stream()
+              .map(
+                  record ->
+                      Route.builder()
+                          .airline(record.get(0))
+                          .airlineId(record.get(1))
+                          .sourceAirport(record.get(2))
+                          .sourceAirportId(record.get(3))
+                          .destinationAirport(record.get(4))
+                          .destinationAirportId(record.get(5))
+                          .codeShare(record.get(6))
+                          .stops(record.get(7))
+                          .equipment(record.get(8))
+                          .price(record.get(9))
+                          .build())
+              .toList();
+    } catch (IOException e) {
+      log.error("Unable to parse CSV on path: " + path, e);
+      //      throw new RuntimeException(e);
+    }
+
+    return routes;
   }
 }

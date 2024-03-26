@@ -1,13 +1,20 @@
 package com.ivanm.flightadvisor;
 
+import com.ivanm.flightadvisor.dao.AirportRepository;
 import com.ivanm.flightadvisor.dao.RouteRepository;
+import com.ivanm.flightadvisor.dao.entity.AirportEntity;
+import com.ivanm.flightadvisor.dao.entity.RouteEntity;
 import com.ivanm.flightadvisor.service.domain.Airport;
 import com.ivanm.flightadvisor.service.domain.Route;
+import com.ivanm.flightadvisor.util.dto.AirportDto;
 import com.ivanm.flightadvisor.util.dto.RouteDto;
 import com.ivanm.flightadvisor.util.parser.CsvParser;
 import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,8 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
 @EnableTransactionManagement
 public class FlightAdvisorApplication {
 
-  @Autowired
-  private RouteRepository routeRepository;
+  @Autowired private RouteRepository routeRepository;
+  @Autowired private AirportRepository airportRepository;
 
   public static void main(String[] args) {
 
@@ -42,9 +49,20 @@ public class FlightAdvisorApplication {
   @Transactional
   public void init() throws IOException {
 
-    List<Route> routeList = CsvParser.toRoutes(routeResource.getFile());
     List<Airport> airportList = CsvParser.toAirports(airportResource.getFile());
+    List<Route> routeList = CsvParser.toRoutes(routeResource.getFile());
 
-    routeRepository.saveAll(RouteDto.toEntityList(routeList));
+    List<Airport> filteredAirports =
+        airportList.stream().filter(airport -> !Objects.equals(airport.iata(), "\\N")).toList();
+    Map<String, Airport> airportMap =
+        filteredAirports.stream().collect(Collectors.toMap(Airport::iata, airport -> airport));
+
+    List<AirportEntity> airportEntities = AirportDto.toEntities(airportList);
+    List<RouteEntity> routeEntities = RouteDto.toEntities(routeList, airportMap);
+
+    airportRepository.saveAll(airportEntities);
+    routeRepository.saveAll(routeEntities);
+
+    List<RouteEntity> entities = routeRepository.findAll();
   }
 }
