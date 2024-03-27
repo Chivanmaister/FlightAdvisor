@@ -25,7 +25,7 @@ public final class CsvParser {
 
   public static List<Airport> toAirports(File path) {
 
-    List<Airport> airports = Collections.emptyList();
+    List<Airport> airports;
 
     try (CSVParser parser = CSVParser.parse(path, Charset.defaultCharset(), DEFAULT_WITH_ESCAPE)) {
       airports =
@@ -59,7 +59,7 @@ public final class CsvParser {
 
   public static List<Route> toRoutes(File path) {
 
-    List<Route> routes = Collections.emptyList();
+    List<Route> routes;
 
     try (CSVParser parser = CSVParser.parse(path, Charset.defaultCharset(), CSVFormat.DEFAULT)) {
       routes =
@@ -81,7 +81,7 @@ public final class CsvParser {
               .toList();
     } catch (IOException e) {
       log.error("Unable to parse CSV on path: " + path, e);
-      //      throw new RuntimeException(e);
+      throw new CSVParserException("Unable to parse CSV on path: " + path);
     }
 
     return routes;
