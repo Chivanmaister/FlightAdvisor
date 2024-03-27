@@ -1,5 +1,6 @@
 package com.ivanm.flightadvisor.util.parser;
 
+import com.ivanm.flightadvisor.exception.CSVParserException;
 import com.ivanm.flightadvisor.exception.ClassInitializationException;
 import com.ivanm.flightadvisor.service.domain.Airport;
 import com.ivanm.flightadvisor.service.domain.Route;
@@ -50,6 +51,7 @@ public final class CsvParser {
               .toList();
     } catch (IOException e) {
       log.error("Unable to parse CSV on path: " + path, e);
+      throw new CSVParserException("Unable to parse CSV on path: " + path);
     }
 
     return airports;

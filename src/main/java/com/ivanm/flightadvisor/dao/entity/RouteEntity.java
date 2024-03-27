@@ -23,8 +23,8 @@ import lombok.ToString;
 @Builder
 @ToString
 @EqualsAndHashCode
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "t_route")
 public class RouteEntity implements Serializable {
 
