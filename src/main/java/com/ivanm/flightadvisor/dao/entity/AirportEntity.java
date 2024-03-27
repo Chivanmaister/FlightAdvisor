@@ -1,12 +1,12 @@
 package com.ivanm.flightadvisor.dao.entity;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -27,7 +27,6 @@ public class AirportEntity implements Serializable {
   @Serial private static final long serialVersionUID = 8337519143320978852L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   public Integer id;
 
   public String name;
@@ -55,4 +54,11 @@ public class AirportEntity implements Serializable {
   public String type;
 
   public String source;
+
+  @OneToMany
+//  @JoinColumn(name = "sourceAirportId", referencedColumnName = "id")
+  public List<RouteEntity> sourceRouteEntities;
+
+  @OneToMany(mappedBy = "destinationAirportEntity")
+  public List<RouteEntity> destinationRouteEntities;
 }

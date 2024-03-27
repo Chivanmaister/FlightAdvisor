@@ -8,3 +8,5 @@ spring:
     console:
       enabled: true
       path: /h2-ui
+  jpa:
+    show-sql: true
