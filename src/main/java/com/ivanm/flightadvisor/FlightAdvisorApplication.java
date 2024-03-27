@@ -50,32 +50,18 @@ public class FlightAdvisorApplication {
   public void init() throws IOException {
 
     List<Airport> airportList = CsvParser.toAirports(airportResource.getFile());
+    List<Route> routeList = CsvParser.toRoutes(routeResource.getFile());
+
+    List<Airport> filteredAirports =
+        airportList.stream().filter(airport -> !Objects.equals(airport.iata(), "\\N")).toList();
     Map<String, Airport> airportMap =
-        airportList.stream()
-            .filter(airport -> !Objects.equals(airport.iata(), "\\N"))
-            .collect(Collectors.toMap(Airport::iata, airport -> airport));
-    List<Route> routeList = CsvParser.toRoutes(routeResource.getFile(), airportMap);
+        filteredAirports.stream().collect(Collectors.toMap(Airport::iata, airport -> airport));
 
     List<AirportEntity> airportEntities = AirportDto.toEntities(airportList);
-    List<RouteEntity> routeEntities = RouteDto.toEntities(routeList);
-
-    Map<String, AirportEntity> airportEntityMap =
-        airportEntities.stream()
-            .filter(airportEntity -> !Objects.equals(airportEntity.iata, "\\N"))
-            .collect(Collectors.toMap(AirportEntity::getIata, airport -> airport));
-    List<RouteEntity> routeEntityList =
-        routeEntities.stream()
-            .peek(
-                routeEntity -> {
-                  routeEntity.setSourceAirportId(
-                      airportEntityMap.get(routeEntity.getSourceAirport()));
-                  routeEntity.setDestinationAirportId(
-                      airportEntityMap.get(routeEntity.getDestinationAirport()));
-                })
-            .toList();
+    List<RouteEntity> routeEntities = RouteDto.toEntities(routeList, airportMap);
 
     airportRepository.saveAll(airportEntities);
-    routeRepository.saveAll(routeEntityList);
+    routeRepository.saveAll(routeEntities);
 
     List<RouteEntity> entities = routeRepository.findAll();
   }

@@ -2,8 +2,10 @@ package com.ivanm.flightadvisor.util.dto;
 
 import com.ivanm.flightadvisor.dao.entity.RouteEntity;
 import com.ivanm.flightadvisor.exception.ClassInitializationException;
+import com.ivanm.flightadvisor.service.domain.Airport;
 import com.ivanm.flightadvisor.service.domain.Route;
 import java.util.List;
+import java.util.Map;
 
 public final class RouteDto {
 
@@ -11,18 +13,18 @@ public final class RouteDto {
     throw new ClassInitializationException("RouteDto cannot be initialized");
   }
 
-  public static List<RouteEntity> toEntities(List<Route> routes) {
-    return routes.stream().map(RouteDto::toEntity).toList();
+  public static List<RouteEntity> toEntities(List<Route> routes, Map<String, Airport> airportMap) {
+    return routes.stream().map(route -> RouteDto.toEntity(route, airportMap)).toList();
   }
 
-  public static RouteEntity toEntity(Route route) {
+  public static RouteEntity toEntity(Route route, Map<String, Airport> airportMap) {
     return RouteEntity.builder()
         .airline(route.airline())
         .airlineId(route.airlineId())
         .sourceAirport(route.sourceAirport())
-        .sourceAirportId(AirportDto.toEntity(route.sourceAirportId()))
+        .sourceAirportId(AirportDto.toEntity(airportMap.get(route.sourceAirportId())))
         .destinationAirport(route.destinationAirport())
-        .destinationAirportId(AirportDto.toEntity(route.destinationAirportId()))
+        .destinationAirportId(AirportDto.toEntity(airportMap.get(route.destinationAirportId())))
         .codeShare(route.codeShare())
         .stops(route.stops())
         .equipment(route.equipment())

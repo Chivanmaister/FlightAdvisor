@@ -17,7 +17,7 @@ public final class AirportDto {
 
   public static AirportEntity toEntity(Airport airport) {
 
-    if (airport != null)
+    if (airport != null) {
       return AirportEntity.builder()
           .id(airport.id())
           .name(airport.name())
@@ -34,6 +34,7 @@ public final class AirportDto {
           .type(airport.type())
           .source(airport.source())
           .build();
+    }
     return null;
   }
 }
