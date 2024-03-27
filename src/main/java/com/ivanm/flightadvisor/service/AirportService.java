@@ -3,6 +3,7 @@ package com.ivanm.flightadvisor.service;
 import com.ivanm.flightadvisor.dao.AirportRepository;
 import com.ivanm.flightadvisor.dao.entity.AirportEntity;
 import com.ivanm.flightadvisor.service.domain.Airport;
+import com.ivanm.flightadvisor.service.domain.CityAirport;
 import com.ivanm.flightadvisor.util.dto.AirportDto;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -27,4 +28,8 @@ public class AirportService {
     repository.saveAll(airportEntities);
   }
 
+  @Transactional(readOnly = true)
+  public List<CityAirport> searchCitiesByName(String name) {
+    return AirportDto.toDomains(repository.findAirportByCityName(name));
+  }
 }
