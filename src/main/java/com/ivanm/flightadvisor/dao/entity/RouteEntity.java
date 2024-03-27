@@ -40,11 +40,7 @@ public class RouteEntity implements Serializable {
 
   public String sourceAirport;
 
-  public String sourceAirportId;
-
   public String destinationAirport;
-
-  public String destinationAirportId;
 
   public String codeShare;
 
@@ -55,10 +51,10 @@ public class RouteEntity implements Serializable {
   public String price;
 
   @ManyToOne
-  @JoinColumn(name = "sourceAirportEntityId")
-  public AirportEntity sourceAirportEntity;
+  @JoinColumn(name = "sourceAirportId")
+  public AirportEntity sourceAirportId;
 
   @ManyToOne
-  @JoinColumn(name = "destinationAirportEntityId")
-  public AirportEntity destinationAirportEntity;
+  @JoinColumn(name = "destinationAirportId")
+  public AirportEntity destinationAirportId;
 }

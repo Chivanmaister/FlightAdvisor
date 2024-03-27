@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -22,7 +23,7 @@ public final class CsvParser {
     throw new ClassInitializationException("CSVParser cannot be initialized");
   }
 
-  public static List<Route> toRoutes(File path) {
+  public static List<Route> toRoutes(File path, Map<String, Airport> airportMap) {
 
     List<Route> routes = Collections.emptyList();
 
@@ -35,9 +36,9 @@ public final class CsvParser {
                           .airline(record.get(0))
                           .airlineId(record.get(1))
                           .sourceAirport(record.get(2))
-                          .sourceAirportId(record.get(3))
+                          .sourceAirportId(airportMap.get(record.get(3)))
                           .destinationAirport(record.get(4))
-                          .destinationAirportId(record.get(5))
+                          .destinationAirportId(airportMap.get(record.get(5)))
                           .codeShare(record.get(6))
                           .stops(record.get(7))
                           .equipment(record.get(8))

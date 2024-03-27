@@ -49,13 +49,17 @@ public class FlightAdvisorApplication {
   @Transactional
   public void init() throws IOException {
 
-    List<Route> routeList = CsvParser.toRoutes(routeResource.getFile());
     List<Airport> airportList = CsvParser.toAirports(airportResource.getFile());
+    Map<String, Airport> airportMap =
+        airportList.stream()
+            .filter(airport -> !Objects.equals(airport.iata(), "\\N"))
+            .collect(Collectors.toMap(Airport::iata, airport -> airport));
+    List<Route> routeList = CsvParser.toRoutes(routeResource.getFile(), airportMap);
 
     List<AirportEntity> airportEntities = AirportDto.toEntities(airportList);
     List<RouteEntity> routeEntities = RouteDto.toEntities(routeList);
 
-    Map<String, AirportEntity> airportMap =
+    Map<String, AirportEntity> airportEntityMap =
         airportEntities.stream()
             .filter(airportEntity -> !Objects.equals(airportEntity.iata, "\\N"))
             .collect(Collectors.toMap(AirportEntity::getIata, airport -> airport));
@@ -63,10 +67,10 @@ public class FlightAdvisorApplication {
         routeEntities.stream()
             .peek(
                 routeEntity -> {
-                  routeEntity.setSourceAirportEntity(
-                      airportMap.getOrDefault(routeEntity.getSourceAirport(), null));
-                  routeEntity.setDestinationAirportEntity(
-                      airportMap.getOrDefault(routeEntity.getDestinationAirport(), null));
+                  routeEntity.setSourceAirportId(
+                      airportEntityMap.get(routeEntity.getSourceAirport()));
+                  routeEntity.setDestinationAirportId(
+                      airportEntityMap.get(routeEntity.getDestinationAirport()));
                 })
             .toList();
 

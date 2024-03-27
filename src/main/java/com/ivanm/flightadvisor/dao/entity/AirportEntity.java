@@ -55,10 +55,9 @@ public class AirportEntity implements Serializable {
 
   public String source;
 
-  @OneToMany
-//  @JoinColumn(name = "sourceAirportId", referencedColumnName = "id")
+  @OneToMany(mappedBy = "sourceAirportId")
   public List<RouteEntity> sourceRouteEntities;
 
-  @OneToMany(mappedBy = "destinationAirportEntity")
+  @OneToMany(mappedBy = "destinationAirportId")
   public List<RouteEntity> destinationRouteEntities;
 }

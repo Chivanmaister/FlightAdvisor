@@ -16,22 +16,24 @@ public final class AirportDto {
   }
 
   public static AirportEntity toEntity(Airport airport) {
-    return AirportEntity
-        .builder()
-        .id(airport.id())
-        .name(airport.name())
-        .city(airport.city())
-        .country(airport.country())
-        .iata(airport.iata())
-        .icao(airport.icao())
-        .latitude(airport.latitude())
-        .longitude(airport.longitude())
-        .altitude(airport.altitude())
-        .timezone(airport.timezone())
-        .dst(airport.dst())
-        .databaseTimezone(airport.databaseTimezone())
-        .type(airport.type())
-        .source(airport.source())
-        .build();
+
+    if (airport != null)
+      return AirportEntity.builder()
+          .id(airport.id())
+          .name(airport.name())
+          .city(airport.city())
+          .country(airport.country())
+          .iata(airport.iata())
+          .icao(airport.icao())
+          .latitude(airport.latitude())
+          .longitude(airport.longitude())
+          .altitude(airport.altitude())
+          .timezone(airport.timezone())
+          .dst(airport.dst())
+          .databaseTimezone(airport.databaseTimezone())
+          .type(airport.type())
+          .source(airport.source())
+          .build();
+    return null;
   }
 }
