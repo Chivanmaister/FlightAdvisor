@@ -1,8 +1,10 @@
 package com.ivanm.flightadvisor.util.dto;
 
+import com.ivanm.flightadvisor.controller.response.CityAirportResponse;
 import com.ivanm.flightadvisor.dao.entity.AirportEntity;
 import com.ivanm.flightadvisor.exception.ClassInitializationException;
 import com.ivanm.flightadvisor.service.domain.Airport;
+import com.ivanm.flightadvisor.service.domain.CityAirport;
 import java.util.List;
 
 public final class AirportDto {
@@ -36,5 +38,31 @@ public final class AirportDto {
           .build();
     }
     return null;
+  }
+
+  public static List<CityAirport> toDomains(List<AirportEntity> airportEntities) {
+    return airportEntities.stream().map(AirportDto::toDomain).toList();
+  }
+
+  public static CityAirport toDomain(AirportEntity airport) {
+    return CityAirport.builder()
+        .id(airport.id)
+        .airportName(airport.name)
+        .cityName(airport.city)
+        .country(airport.country)
+        .build();
+  }
+
+  public static List<CityAirportResponse> toAirportResponses(List<CityAirport> cityAirports) {
+    return cityAirports.stream().map(AirportDto::toAirportResponse).toList();
+  }
+
+  public static CityAirportResponse toAirportResponse(CityAirport cityAirport) {
+    return CityAirportResponse.builder()
+        .id(cityAirport.id())
+        .airportName(cityAirport.airportName())
+        .cityName(cityAirport.cityName())
+        .country(cityAirport.country())
+        .build();
   }
 }
