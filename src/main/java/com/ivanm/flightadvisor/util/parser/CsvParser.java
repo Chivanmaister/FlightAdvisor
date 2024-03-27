@@ -1,13 +1,12 @@
 package com.ivanm.flightadvisor.util.parser;
 
-import com.ivanm.flightadvisor.exception.CSVParserException;
 import com.ivanm.flightadvisor.exception.ClassInitializationException;
+import com.ivanm.flightadvisor.exception.CsvParserException;
 import com.ivanm.flightadvisor.service.domain.Airport;
 import com.ivanm.flightadvisor.service.domain.Route;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVFormat;
@@ -51,7 +50,7 @@ public final class CsvParser {
               .toList();
     } catch (IOException e) {
       log.error("Unable to parse CSV on path: " + path, e);
-      throw new CSVParserException("Unable to parse CSV on path: " + path);
+      throw new CsvParserException("Unable to parse CSV on path: " + path);
     }
 
     return airports;
@@ -81,7 +80,7 @@ public final class CsvParser {
               .toList();
     } catch (IOException e) {
       log.error("Unable to parse CSV on path: " + path, e);
-      throw new CSVParserException("Unable to parse CSV on path: " + path);
+      throw new CsvParserException("Unable to parse CSV on path: " + path);
     }
 
     return routes;
