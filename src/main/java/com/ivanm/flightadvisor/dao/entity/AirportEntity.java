@@ -12,6 +12,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 @Entity
@@ -19,8 +20,8 @@ import lombok.ToString;
 @Builder
 @ToString
 @EqualsAndHashCode
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "t_airport")
 public class AirportEntity implements Serializable {
 
@@ -60,4 +61,11 @@ public class AirportEntity implements Serializable {
 
   @OneToMany(mappedBy = "destinationAirportId")
   public List<RouteEntity> destinationRouteEntities;
+
+  public AirportEntity(Integer id, String name, String city, String country) {
+    this.id = id;
+    this.name = name;
+    this.city = city;
+    this.country = country;
+  }
 }
