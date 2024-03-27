@@ -21,6 +21,7 @@
     <apache.common.csv.version>1.10.0</apache.common.csv.version>
     <lombok.version>1.18.30</lombok.version>
     <h2.database.version>2.2.224</h2.database.version>
+    <swagger.version>2.0.2</swagger.version>
   </properties>
 
   <dependencies>
@@ -47,6 +48,11 @@
       <artifactId>h2</artifactId>
       <version>${h2.database.version}</version>
       <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+      <version>${swagger.version}</version>
     </dependency>
   </dependencies>
 
