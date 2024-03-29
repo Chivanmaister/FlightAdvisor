@@ -2,6 +2,7 @@ package com.ivanm.flightadvisor.service;
 
 import com.ivanm.flightadvisor.dao.AirportRepository;
 import com.ivanm.flightadvisor.dao.entity.AirportEntity;
+import com.ivanm.flightadvisor.exception.AirportNotFoundException;
 import com.ivanm.flightadvisor.service.domain.Airport;
 import com.ivanm.flightadvisor.service.domain.CityAirport;
 import com.ivanm.flightadvisor.util.dto.AirportDto;
@@ -29,7 +30,15 @@ public class AirportService {
   }
 
   @Transactional(readOnly = true)
-  public List<CityAirport> searchCitiesByName(String name) {
+  public List<Airport> searchCitiesByName(String name) {
     return AirportDto.toDomains(repository.findAirportByCityName(name));
+  }
+
+  @Transactional(readOnly = true)
+  public Airport getById(Integer sourceAirportId) {
+    return AirportDto.toDomain(
+        repository
+            .findById(sourceAirportId)
+            .orElseThrow(() -> new AirportNotFoundException("Airport doesn't exists")));
   }
 }

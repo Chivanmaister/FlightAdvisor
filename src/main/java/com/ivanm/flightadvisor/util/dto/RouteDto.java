@@ -1,5 +1,6 @@
 package com.ivanm.flightadvisor.util.dto;
 
+import com.ivanm.flightadvisor.controller.response.RouteResponse;
 import com.ivanm.flightadvisor.dao.entity.RouteEntity;
 import com.ivanm.flightadvisor.exception.ClassInitializationException;
 import com.ivanm.flightadvisor.service.domain.Airport;
@@ -29,6 +30,30 @@ public final class RouteDto {
         .stops(route.stops())
         .equipment(route.equipment())
         .price(route.price())
+        .build();
+  }
+
+  public static List<RouteResponse> toResponses(List<Route> routes) {
+    return routes.stream().map(RouteDto::toResponse).toList();
+  }
+
+  private static RouteResponse toResponse(Route route) {
+    return RouteResponse.builder()
+        .sourceAirport(route.sourceAirport())
+        .destinationAirport(route.destinationAirport())
+        .price(route.price())
+        .build();
+  }
+
+  public static List<Route> toDomains(List<RouteEntity> routeEntities) {
+    return routeEntities.stream().map(RouteDto::toDomain).toList();
+  }
+
+  private static Route toDomain(RouteEntity routeEntity) {
+    return Route.builder()
+        .sourceAirport(routeEntity.getSourceAirport())
+        .destinationAirport(routeEntity.getDestinationAirport())
+        .price(routeEntity.getPrice())
         .build();
   }
 }

@@ -48,7 +48,7 @@ public class RouteEntity implements Serializable {
 
   public String equipment;
 
-  public String price;
+  public Float price;
 
   @ManyToOne
   @JoinColumn(name = "sourceAirportId")

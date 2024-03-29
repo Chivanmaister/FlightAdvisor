@@ -23,4 +23,10 @@ public class ApplicationExceptionHandler {
 
     return ResponseEntity.of(Optional.of(e.getMessage()));
   }
+
+  @ExceptionHandler(Exception.class)
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  public ResponseEntity<String> handleException(Exception e) {
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Oops, our fault.");
+  }
 }

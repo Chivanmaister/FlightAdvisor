@@ -75,7 +75,7 @@ public final class CsvParser {
                           .codeShare(record.get(6))
                           .stops(record.get(7))
                           .equipment(record.get(8))
-                          .price(record.get(9))
+                          .price(Float.valueOf(record.get(9)))
                           .build())
               .toList();
     } catch (IOException e) {
