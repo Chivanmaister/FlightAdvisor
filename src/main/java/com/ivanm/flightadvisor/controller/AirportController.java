@@ -23,7 +23,7 @@ public class AirportController {
   private final AirportService airportService;
 
   @GetMapping("/cities")
-  public List<CityAirportResponse> searchCity(
+  public List<CityAirportResponse> searchCities(
       @Valid @RequestParam @NotBlank @Size(max = 15) String name) {
     return AirportDto.toAirportResponses(airportService.searchCitiesByName(name));
   }
