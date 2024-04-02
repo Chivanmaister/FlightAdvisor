@@ -1,5 +1,6 @@
 package com.ivanm.flightadvisor.util.dto;
 
+import com.ivanm.flightadvisor.controller.response.AirportResponse;
 import com.ivanm.flightadvisor.controller.response.CityAirportResponse;
 import com.ivanm.flightadvisor.dao.entity.AirportEntity;
 import com.ivanm.flightadvisor.exception.ClassInitializationException;
@@ -45,6 +46,10 @@ public final class AirportDto {
   }
 
   public static Airport toDomain(AirportEntity airport) {
+    if (airport == null) {
+      return null;
+    }
+
     return Airport.builder()
         .id(airport.id)
         .name(airport.name)
@@ -67,4 +72,12 @@ public final class AirportDto {
         .build();
   }
 
+  public static AirportResponse toResponse(Airport airport) {
+    return AirportResponse.builder()
+        .id(airport.id())
+        .name(airport.name())
+        .iata(airport.iata())
+        .city(airport.city())
+        .build();
+  }
 }

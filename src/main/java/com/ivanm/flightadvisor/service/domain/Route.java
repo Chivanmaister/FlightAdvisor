@@ -13,4 +13,6 @@ public record Route(
     String codeShare,
     String stops,
     String equipment,
-    Float price) {}
+    Float price,
+    Airport sourceAirportObj,
+    Airport destinationAirportObj) {}

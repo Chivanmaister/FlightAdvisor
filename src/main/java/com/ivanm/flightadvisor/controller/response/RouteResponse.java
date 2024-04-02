@@ -3,4 +3,5 @@ package com.ivanm.flightadvisor.controller.response;
 import lombok.Builder;
 
 @Builder
-public record RouteResponse(String sourceAirport, String destinationAirport, Float price) {}
+public record RouteResponse(
+    AirportResponse sourceAirport, AirportResponse destinationAirport, Float price) {}

@@ -10,3 +10,6 @@ spring:
       path: /h2-ui
   jpa:
     show-sql: true
+server:
+  search:
+    depth: 2 #do not set value above 3, it will slow searching of routes

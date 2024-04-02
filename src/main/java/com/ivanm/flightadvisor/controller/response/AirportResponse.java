@@ -1,7 +1,6 @@
 package com.ivanm.flightadvisor.controller.response;
 
-import java.util.List;
 import lombok.Builder;
 
 @Builder
-public record AirportResponse(List<CityAirportResponse> cityAirportResponses) {}
+public record AirportResponse(Integer id, String name, String city, String iata) {}

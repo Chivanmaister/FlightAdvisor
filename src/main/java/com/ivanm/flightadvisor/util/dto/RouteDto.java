@@ -1,10 +1,12 @@
 package com.ivanm.flightadvisor.util.dto;
 
+import com.ivanm.flightadvisor.controller.response.RouteDetailResponse;
 import com.ivanm.flightadvisor.controller.response.RouteResponse;
 import com.ivanm.flightadvisor.dao.entity.RouteEntity;
 import com.ivanm.flightadvisor.exception.ClassInitializationException;
 import com.ivanm.flightadvisor.service.domain.Airport;
 import com.ivanm.flightadvisor.service.domain.Route;
+import com.ivanm.flightadvisor.service.domain.RouteDetail;
 import java.util.List;
 import java.util.Map;
 
@@ -33,15 +35,18 @@ public final class RouteDto {
         .build();
   }
 
-  public static List<RouteResponse> toResponses(List<Route> routes) {
-    return routes.stream().map(RouteDto::toResponse).toList();
-  }
-
   private static RouteResponse toResponse(Route route) {
     return RouteResponse.builder()
-        .sourceAirport(route.sourceAirport())
-        .destinationAirport(route.destinationAirport())
+        .sourceAirport(AirportDto.toResponse(route.sourceAirportObj()))
+        .destinationAirport(AirportDto.toResponse(route.destinationAirportObj()))
         .price(route.price())
+        .build();
+  }
+
+  public static RouteDetailResponse toResponse(RouteDetail routeDetail) {
+    return RouteDetailResponse.builder()
+        .routes(routeDetail.routes().stream().map(RouteDto::toResponse).toList())
+        .price(routeDetail.price())
         .build();
   }
 
@@ -54,6 +59,8 @@ public final class RouteDto {
         .sourceAirport(routeEntity.getSourceAirport())
         .destinationAirport(routeEntity.getDestinationAirport())
         .price(routeEntity.getPrice())
+        .sourceAirportObj(AirportDto.toDomain(routeEntity.getSourceAirportId()))
+        .destinationAirportObj(AirportDto.toDomain(routeEntity.getDestinationAirportId()))
         .build();
   }
 }
