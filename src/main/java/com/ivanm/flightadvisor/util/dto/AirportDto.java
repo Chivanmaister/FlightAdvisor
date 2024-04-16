@@ -5,7 +5,6 @@ import com.ivanm.flightadvisor.controller.response.CityAirportResponse;
 import com.ivanm.flightadvisor.dao.entity.AirportEntity;
 import com.ivanm.flightadvisor.exception.ClassInitializationException;
 import com.ivanm.flightadvisor.service.domain.Airport;
-import com.ivanm.flightadvisor.service.domain.CityAirport;
 import java.util.List;
 
 public final class AirportDto {

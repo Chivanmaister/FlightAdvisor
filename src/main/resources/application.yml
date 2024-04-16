@@ -13,3 +13,6 @@ spring:
 server:
   search:
     depth: 2 #do not set value above 3, it will slow searching of routes
+logging:
+  level:
+    root: WARN
