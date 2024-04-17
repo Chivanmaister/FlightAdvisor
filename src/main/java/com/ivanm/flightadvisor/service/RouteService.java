@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -130,7 +131,8 @@ public class RouteService {
   }
 
   @Transactional(readOnly = true)
-  private List<Route> getAllRoutes() {
+  @Cacheable("routes")
+  public List<Route> getAllRoutes() {
     return RouteDto.toDomains(repository.findAll());
   }
 }

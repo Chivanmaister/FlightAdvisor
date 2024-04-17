@@ -4,7 +4,6 @@ import com.ivanm.flightadvisor.dao.AirportRepository;
 import com.ivanm.flightadvisor.dao.entity.AirportEntity;
 import com.ivanm.flightadvisor.exception.AirportNotFoundException;
 import com.ivanm.flightadvisor.service.domain.Airport;
-import com.ivanm.flightadvisor.service.domain.CityAirport;
 import com.ivanm.flightadvisor.util.dto.AirportDto;
 import java.util.List;
 import lombok.AllArgsConstructor;
