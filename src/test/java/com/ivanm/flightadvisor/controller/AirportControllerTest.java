@@ -6,13 +6,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.ivanm.flightadvisor.dao.AirportRepository;
 import com.ivanm.flightadvisor.exception.ApplicationExceptionHandler;
 import com.ivanm.flightadvisor.service.AirportService;
 import com.ivanm.flightadvisor.service.domain.Airport;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -29,7 +27,6 @@ import org.springframework.test.web.servlet.MockMvc;
 public class AirportControllerTest {
 
   @MockBean AirportService airportService;
-  @MockBean AirportRepository repository;
   @Autowired MockMvc mockMvc;
 
   @Test
