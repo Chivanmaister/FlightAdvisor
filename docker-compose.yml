@@ -1,0 +1,35 @@
+#version: '3'
+
+services:
+  psql:
+    container_name: flight_advisor_db
+    image: postgres:16
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=rand0mpassword
+      - POSTGRES_USER=ivanm
+      - POSTGRES_DB=flight_advisor
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -d flight_advisor -U ivanm'"]
+  flight_advisor_app:
+    container_name: flight_advisor_app
+    image: openjdk:21
+    ports:
+      - "8080:8080"
+    depends_on:
+      psql:
+        condition: service_healthy
+    build:
+      context: .
+    volumes:
+      - ./target:/app
+    environment:
+      - POSTGRES_PASSWORD=rand0mpassword
+      - POSTGRES_USER=ivanm
+      - POSTGRES_DB=flight_advisor
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://psql:5432/flight_advisor
+    command: bash -c "java -jar app/flight-advisor.jar"

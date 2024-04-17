@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    url: "jdbc:tc:postgres:16-alpine:///demo1?TC_TMPFS=/flight_advisor:rw"
+    username: postgres
+    password: password
+    driver-class-name: org.postgresql.Driver

@@ -4,8 +4,8 @@ import com.ivanm.flightadvisor.exception.ClassInitializationException;
 import com.ivanm.flightadvisor.exception.CsvParserException;
 import com.ivanm.flightadvisor.service.domain.Airport;
 import com.ivanm.flightadvisor.service.domain.Route;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -22,11 +22,12 @@ public final class CsvParser {
     throw new ClassInitializationException("CSVParser cannot be initialized");
   }
 
-  public static List<Airport> toAirports(File path) {
+  public static List<Airport> toAirports(InputStream stream) {
 
     List<Airport> airports;
 
-    try (CSVParser parser = CSVParser.parse(path, Charset.defaultCharset(), DEFAULT_WITH_ESCAPE)) {
+    try (CSVParser parser =
+        CSVParser.parse(stream, Charset.defaultCharset(), DEFAULT_WITH_ESCAPE)) {
       airports =
           parser.getRecords().stream()
               .map(
@@ -49,18 +50,18 @@ public final class CsvParser {
                           .build())
               .toList();
     } catch (IOException e) {
-      log.error("Unable to parse CSV on path: " + path, e);
-      throw new CsvParserException("Unable to parse CSV on path: " + path);
+      log.error("Unable to parse airport CSV", e);
+      throw new CsvParserException("Unable to parse airport CSV");
     }
 
     return airports;
   }
 
-  public static List<Route> toRoutes(File path) {
+  public static List<Route> toRoutes(InputStream stream) {
 
     List<Route> routes;
 
-    try (CSVParser parser = CSVParser.parse(path, Charset.defaultCharset(), CSVFormat.DEFAULT)) {
+    try (CSVParser parser = CSVParser.parse(stream, Charset.defaultCharset(), CSVFormat.DEFAULT)) {
       routes =
           parser.getRecords().stream()
               .map(
@@ -79,8 +80,8 @@ public final class CsvParser {
                           .build())
               .toList();
     } catch (IOException e) {
-      log.error("Unable to parse CSV on path: " + path, e);
-      throw new CsvParserException("Unable to parse CSV on path: " + path);
+      log.error("Unable to parse route CSV", e);
+      throw new CsvParserException("Unable to parse route CSV");
     }
 
     return routes;

@@ -6,8 +6,8 @@ import com.ivanm.flightadvisor.service.domain.Airport;
 import com.ivanm.flightadvisor.service.domain.Route;
 import com.ivanm.flightadvisor.util.parser.CsvParser;
 import jakarta.annotation.PostConstruct;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -31,22 +31,21 @@ public class InitService {
   @PostConstruct
   public void init() {
 
-    File airportFile;
-    File routeFile;
+    List<Airport> airports;
+    List<Route> routes;
 
     Resource airportResource = csvResourceConfiguration.getAirportResource();
     Resource routeResource = csvResourceConfiguration.getRouteResource();
 
-    try {
-      airportFile = airportResource.getFile();
-      routeFile = routeResource.getFile();
-    } catch (IOException e) {
-      log.error("Error reading files from resources", e);
-      throw new ReadResourceFileException("Unable to read files from resource");
-    }
+    try (InputStream airportFile = airportResource.getInputStream();
+        InputStream  routeFile = routeResource.getInputStream()) {
 
-    List<Airport> airports = CsvParser.toAirports(airportFile);
-    List<Route> routes = CsvParser.toRoutes(routeFile);
+      airports = CsvParser.toAirports(airportFile);
+      routes = CsvParser.toRoutes(routeFile);
+    } catch (IOException e) {
+      log.error("Error reading stream from resources", e);
+      throw new ReadResourceFileException("Unable to read streams from resource");
+    }
 
     List<Airport> filteredAirports =
         airports.stream().filter(airport -> !Objects.equals(airport.iata(), "\\N")).toList();

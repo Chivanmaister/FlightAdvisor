@@ -24,7 +24,7 @@ public class AirportController {
 
   @GetMapping("/cities")
   public List<CityAirportResponse> searchCities(
-      @Valid @RequestParam @NotBlank @Size(max = 15) String name) {
+      @Valid @RequestParam @NotBlank @Size(min = 1, max = 15) String name) {
     return AirportDto.toAirportResponses(airportService.searchCitiesByName(name));
   }
 }
