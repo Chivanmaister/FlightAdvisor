@@ -7,6 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.ivanm.flightadvisor.configuration.AppSecurityConfiguration;
+import com.ivanm.flightadvisor.configuration.KeycloakLogoutHandler;
+import com.ivanm.flightadvisor.configuration.OpenApiSecurityConfig;
 import com.ivanm.flightadvisor.service.AirportService;
 import com.ivanm.flightadvisor.service.domain.Airport;
 import java.util.List;
@@ -18,7 +20,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(AirportController.class)
-@Import(AppSecurityConfiguration.class)
+@Import({AppSecurityConfiguration.class, OpenApiSecurityConfig.class, KeycloakLogoutHandler.class})
 public class AirportControllerTest {
 
   @MockBean AirportService airportService;

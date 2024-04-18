@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/flight_advisor
-    username: ivanm
-    password: rand0mpassword
+    username: ${DB_USERNAME:ivanm}
+    password: ${DB_PASSWORD:rand0mpassword}
     driver-class-name: org.postgresql.Driver
   jpa:
     properties:
@@ -14,9 +14,26 @@ spring:
     hibernate:
       ddl-auto: create
     show-sql: true
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: ${KEYCLOAK_CLIENT:flight-advisor-app}
+            authorization-grant-type: authorization_code
+            scope: openid
+        provider:
+          keycloak:
+            issuer-uri: ${KEYCLOAK_URI:http://localhost:9000/realms/flight-advisor-realm}
+            user-name-attribute: preferred_username
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_URI:http://localhost:9000/realms/flight-advisor-realm}
+
 server:
   search:
-    depth: 2 #do not set value above 3, it will slow searching of routes
+    depth: ${ROUTE_SEARCH_DEPTH:2} #do not set value above 3, it will slow searching of routes
+
 logging:
   level:
     root: WARN
