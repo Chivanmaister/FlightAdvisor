@@ -4,6 +4,3 @@ spring:
     username: ivanm
     password: rand0mpassword
     driver-class-name: org.postgresql.Driver
-  test:
-    database:
-      replace: none
