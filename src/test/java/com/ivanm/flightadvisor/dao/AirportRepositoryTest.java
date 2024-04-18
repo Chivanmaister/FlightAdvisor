@@ -16,10 +16,13 @@ public class AirportRepositoryTest {
   @Autowired AirportRepository airportRepository;
 
   @Test
-  public void given_When_Then() {
+  public void givenAirportList_WhenFindingAllAirports_ThenReturnAirports() {
 
-    List<AirportEntity> airportEntities = airportRepository.findAll();
+    List<AirportEntity> airportEntities = List.of(AirportEntity.builder().id(1).build());
+    airportRepository.saveAll(airportEntities);
 
-    assertThat("Airports not found", !airportEntities.isEmpty());
+    List<AirportEntity> airportEntityList = airportRepository.findAll();
+
+    assertThat("Airports not found", !airportEntityList.isEmpty());
   }
 }
