@@ -14,8 +14,12 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +42,15 @@ public class RouteService {
   public RouteDetail getLowestRoutePriceBetween(
       Integer sourceAirportId, Integer destinationAirportId) {
 
-    List<List<Route>> routesList = findBetween(sourceAirportId, destinationAirportId);
+    List<List<Route>> routesList ;
+
+    switch (depthSearchConfig.getType()) {
+      case STANDARD -> routesList = findBetween(sourceAirportId, destinationAirportId);
+      case HEURISTIC ->
+          routesList = List.of(findCheapestWithHeuristic(sourceAirportId, destinationAirportId));
+      default ->
+          throw new IllegalStateException("Unexpected value: " + depthSearchConfig.getType());
+    }
 
     return routesList.stream()
         .map(
@@ -125,6 +137,62 @@ public class RouteService {
     }
   }
 
+  private List<Route> findCheapestWithHeuristic(
+      Integer sourceAirportId, Integer destinationAirportId) {
+
+    Airport sourceAirport = airportService.getById(sourceAirportId);
+    Airport destinationAirport = airportService.getById(destinationAirportId);
+
+    var sourceIata = sourceAirport.iata();
+    var destinationIata = destinationAirport.iata();
+
+    var sourceToAllCheapestRoutes =
+        getAllRoutes().parallelStream()
+            .collect(
+                Collectors.groupingBy(
+                    Route::sourceAirport,
+                    Collectors.groupingBy(
+                        Route::destinationAirport,
+                        Collectors.minBy(Comparator.comparingDouble(Route::price)))))
+            .entrySet()
+            .parallelStream()
+            .collect(
+                Collectors.toMap(
+                    Entry::getKey,
+                    entry ->
+                        entry.getValue().values().parallelStream().map(Optional::get).toList()));
+
+    List<Route> destinationRoutes = sourceToAllCheapestRoutes.get(sourceIata);
+    List<RoutesWithTotalPrice> savedRoutes =
+        destinationRoutes.stream().map(RoutesWithTotalPrice::new).toList();
+    RoutesWithTotalPrice cheapestRoutes;
+    List<RoutesWithTotalPrice> allSavedRoutes = new LinkedList<>(savedRoutes);
+
+    do {
+
+      cheapestRoutes =
+          allSavedRoutes.stream()
+              .min(Comparator.comparingDouble(RoutesWithTotalPrice::getTotalPrice))
+              .get();
+      Route lastRoute = cheapestRoutes.getRoutes().getLast();
+      destinationRoutes =
+          sourceToAllCheapestRoutes.getOrDefault(lastRoute.destinationAirport(), List.of());
+      allSavedRoutes.remove(cheapestRoutes);
+      for (Route route : destinationRoutes) {
+        if (!cheapestRoutes.getPassedAirports().contains(route.destinationAirport())) {
+          RoutesWithTotalPrice newRoute = new RoutesWithTotalPrice(cheapestRoutes, route);
+          allSavedRoutes.add(newRoute);
+        }
+      }
+
+    } while (!cheapestRoutes.getRoutes().stream()
+        .map(Route::destinationAirport)
+        .toList()
+        .contains(destinationIata));
+
+    return cheapestRoutes.getRoutes();
+  }
+
   @Transactional
   private void save(List<RouteEntity> routeEntities) {
     repository.saveAll(routeEntities);
@@ -134,5 +202,32 @@ public class RouteService {
   @Cacheable("routes")
   public List<Route> getAllRoutes() {
     return RouteDto.toDomains(repository.findAll());
+  }
+
+  @Getter
+  private static class RoutesWithTotalPrice {
+
+    private LinkedList<Route> routes = new LinkedList<>();
+    private List<String> passedAirports = new ArrayList<>();
+    private double totalPrice;
+
+    public RoutesWithTotalPrice(Route route) {
+      passedAirports.add(route.sourceAirport());
+      routes.add(route);
+      totalPrice += route.price();
+    }
+
+    public RoutesWithTotalPrice(RoutesWithTotalPrice clone, Route route) {
+      this.routes = new LinkedList<>(clone.routes);
+      this.totalPrice = clone.totalPrice;
+      this.passedAirports = new LinkedList<>(clone.getPassedAirports());
+      addRoute(route);
+    }
+
+    public void addRoute(Route route) {
+      passedAirports.add(route.destinationAirport());
+      routes.add(route);
+      totalPrice += route.price();
+    }
   }
 }

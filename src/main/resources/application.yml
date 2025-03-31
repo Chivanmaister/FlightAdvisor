@@ -33,6 +33,7 @@ spring:
 server:
   search:
     depth: ${ROUTE_SEARCH_DEPTH:2} #do not set value above 3, it will slow searching of routes
+    type: ${ROUTE_SEARCH_TYPE:STANDARD}
 
 logging:
   level:
